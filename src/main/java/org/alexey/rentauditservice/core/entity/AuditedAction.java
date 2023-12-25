@@ -11,5 +11,4 @@ public enum AuditedAction {
     INFO_ABOUT_USER_BY_ID,
     CREATE_USER,
     UPDATE_USER
-
 }

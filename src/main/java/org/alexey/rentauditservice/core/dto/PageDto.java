@@ -30,5 +30,4 @@ public class PageDto {
     private Integer numberOfElements;
 
     private Boolean last;
-
 }

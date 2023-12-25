@@ -13,8 +13,7 @@ import java.util.List;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class PageOfAuditDto extends PageDto{
+public class PageOfAuditDto extends PageDto {
 
     private List<AuditDto> content;
-
 }

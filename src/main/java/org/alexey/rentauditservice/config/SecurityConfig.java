@@ -10,14 +10,15 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static org.springframework.http.HttpMethod.*;
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.POST;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtFilter filter) throws Exception  {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtFilter filter) throws Exception {
         // Enable CORS and disable CSRF
         http = http.cors().and().csrf().disable();
 
@@ -46,23 +47,14 @@ public class SecurityConfig {
 
         // Set permissions on endpoints
         http.authorizeHttpRequests(requests -> requests
-                // Our public endpoints
-//                .requestMatchers( "/realty/api/**").permitAll()
-//                //Следующие два пример делают одно и тоже
-                .requestMatchers(GET,"/audit").hasAnyRole("ADMIN") //Обрати внимание что тут нет префикса ROLE_
-                .requestMatchers(GET,"/audit/{id}").hasAnyRole("ADMIN") //Обрати внимание что тут нет префикса ROLE_
-                .requestMatchers(POST,"/audit").hasAnyRole("SYSTEM") //Обрати внимание что тут нет префикса ROLE_
-//                .requestMatchers(GET,"/users").hasAnyAuthority("ROLE_ADMIN") //А тут есть
-                .requestMatchers(GET,"/audit/**").authenticated()
-//                // Our private endpoints
-//                .anyRequest().authenticated()
+                .requestMatchers(GET, "/audit").hasAnyRole("ADMIN")
+                .requestMatchers(GET, "/audit/{id}").hasAnyRole("ADMIN")
+                .requestMatchers(POST, "/audit").hasAnyRole("SYSTEM")
+                .requestMatchers(GET, "/audit/**").authenticated()
         );
 
         // Add JWT token filter
-        http.addFilterBefore(
-                filter,
-                UsernamePasswordAuthenticationFilter.class
-        );
+        http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

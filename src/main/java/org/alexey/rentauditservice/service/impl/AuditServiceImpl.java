@@ -17,7 +17,6 @@ import java.util.UUID;
 @Service
 public class AuditServiceImpl implements AuditService {
 
-
     private final AuditRepository auditRepository;
     private final AuditTransformer auditTransformer;
 
@@ -30,19 +29,19 @@ public class AuditServiceImpl implements AuditService {
     public Page<AuditDto> getAllAudits(Pageable pageable) {
         Page<Audit> pageEntity = auditRepository.findAll(pageable);
         List<AuditDto> auditDtoList = pageEntity.stream()
-                .map(it -> auditTransformer.transformAuditDtoFromEntity(it))
+                .map(auditTransformer::transformAuditDtoFromEntity)
                 .toList();
         return new PageImpl<AuditDto>(auditDtoList, pageable, pageEntity.getTotalElements());
     }
 
     @Override
     public AuditDto findAuditById(UUID id) {
-         Audit auditById = auditRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Audit", id));
+        Audit auditById = auditRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Audit", id));
         return auditTransformer.transformAuditDtoFromEntity(auditById);
     }
 
     @Override
-    public AuditDto saveAction(AuditDto auditDto){
+    public AuditDto saveAction(AuditDto auditDto) {
         Audit entity = auditRepository.save(auditTransformer.transformEntityFromAuditDto(auditDto));
         return auditTransformer.transformAuditDtoFromEntity(entity);
     }

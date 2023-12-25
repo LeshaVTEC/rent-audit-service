@@ -4,7 +4,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.alexey.rentauditservice.core.dto.UserAuditDto;
 import org.alexey.rentauditservice.core.dto.UserDetailsDto;
 import org.alexey.rentauditservice.service.jwt.JwtHandler;
 import org.springframework.http.HttpHeaders;
@@ -31,16 +30,17 @@ public class JwtFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain)
-            throws ServletException, IOException {
+    protected void doFilterInternal(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain filterChain
+    ) throws ServletException, IOException {
         final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (isEmpty(header) || !header.startsWith("Bearer ")) {
             throw new RuntimeException("No token");
         }
         final String token = header.split(" ")[1].trim();
-        if(!jwtHandler.validate(token)){
+        if (!jwtHandler.validate(token)) {
             throw new RuntimeException("Not valid token");
         }
 
@@ -52,14 +52,11 @@ public class JwtFilter extends OncePerRequestFilter {
                 null,
                 authorities
         );
-        authentication.setDetails(
-                new WebAuthenticationDetailsSource().buildDetails(request)
-        );
+        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         filterChain.doFilter(request, response);
 
         filterChain.doFilter(request, response);
     }
-
 }

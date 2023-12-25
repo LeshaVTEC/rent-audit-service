@@ -7,5 +7,4 @@ import org.springframework.data.domain.Page;
 public interface PageTransformer {
 
     PageOfAuditDto transformPageOfAuditDtoFromPage(Page<AuditDto> page);
-
 }
