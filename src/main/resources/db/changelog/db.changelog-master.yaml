@@ -1,0 +1,6 @@
+databaseChangeLog:
+  - include:
+      file: db/db.schemas.xml
+  - include:
+      relativeToChangelogFile: true
+      file: ddl/audits-ddl.xml
