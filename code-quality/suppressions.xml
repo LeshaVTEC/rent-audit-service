@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE suppressions PUBLIC
+        "-//Puppy Crawl//DTD Suppressions 1.0//EN"
+        "http://www.puppycrawl.com/dtds/suppressions_1_0.dtd">
+<suppressions>
+    <!-- Transformers for long models have to be long, correspondingly. -->
+    <suppress files=".*Transformer.java" checks="MethodLength"/>
+
+    <!-- Huge amount of the fields of this Entity causes huge length of the class and methods. -->
+    <suppress files=".TestConfig.java" checks="FileLength"/>
+
+    <!-- Huge amount of the fields of this Entity causes huge length of the "merge()" method. -->
+    <suppress files=".TestConfig.java" checks="MethodLength"/>
+
+    <!-- Huge transformation class. -->
+    <suppress files=".ConnectionBuilder.java" checks="FileLength"/>
+
+    <!-- Huge transformation class. -->
+    <suppress files=".ConnectionBuilder.java" checks="MethodLength"/>
+
+    <suppress files=".Audit.java" checks="FileLength"/>
+
+    <suppress files=".SecurityConfig.java" checks="ParameterAssignment"/>
+</suppressions>

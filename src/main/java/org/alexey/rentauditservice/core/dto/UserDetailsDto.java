@@ -23,5 +23,4 @@ public class UserDetailsDto {
     private String fio;
 
     private UserRole role;
-
 }

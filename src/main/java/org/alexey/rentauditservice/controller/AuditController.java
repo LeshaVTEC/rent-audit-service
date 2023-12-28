@@ -6,7 +6,14 @@ import org.alexey.rentauditservice.service.AuditService;
 import org.alexey.rentauditservice.transformer.PageTransformer;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
 
@@ -36,7 +43,7 @@ public class AuditController {
         return auditService.findAuditById(id);
     }
 
-    @PostMapping(value = "/", produces = APPLICATION_JSON_VALUE)
+    @PostMapping(produces = APPLICATION_JSON_VALUE)
     AuditDto acceptRequestToCreateLog(@RequestHeader String AUTHORIZATION, @RequestBody AuditDto auditDto) {
         return auditService.saveAction(auditDto);
     }

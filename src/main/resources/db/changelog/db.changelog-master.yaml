@@ -4,3 +4,6 @@ databaseChangeLog:
   - include:
       relativeToChangelogFile: true
       file: ddl/audits-ddl.xml
+  - include:
+      relativeToChangelogFile: true
+      file: ddl/reports-ddl.xml

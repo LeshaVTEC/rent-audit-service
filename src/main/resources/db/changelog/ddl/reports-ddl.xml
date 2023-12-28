@@ -10,33 +10,33 @@
         </sql>
     </changeSet>
 
-    <changeSet author="org.alexey" id="create_table_audits">
-        <createTable tableName="audits" schemaName="${config.schema}">
+    <changeSet author="org.alexey" id="create_table_reports">
+        <createTable tableName="reports" schemaName="${config.schema}">
             <column name="id" type="uuid">
-                <constraints primaryKey="true" nullable="false" primaryKeyName="audits_id_pk"/>
+                <constraints primaryKey="true" nullable="false" primaryKeyName="reports_id_pk"/>
             </column>
-            <column name="action_date" type="timestamp with time zone">
+            <column name="created_date" type="timestamp with time zone">
                 <constraints nullable="false"/>
             </column>
-            <column name="user_id" type="uuid">
+            <column name="updated_date" type="timestamp with time zone">
                 <constraints nullable="false"/>
             </column>
-            <column name="user_email" type="varchar">
+            <column name="status" type="varchar">
                 <constraints nullable="false"/>
             </column>
-            <column name="user_fio" type="varchar">
+            <column name="type" type="varchar">
                 <constraints nullable="false"/>
             </column>
-            <column name="user_role" type="varchar">
+            <column name="description" type="varchar">
                 <constraints nullable="false"/>
             </column>
-            <column name="action" type="varchar">
+            <column name="user_id" type="varchar">
                 <constraints nullable="false"/>
             </column>
-            <column name="essence_type" type="varchar">
+            <column name="*from*" type="date">
                 <constraints nullable="false"/>
             </column>
-            <column name="essence_type_id" type="varchar">
+            <column name="*to*" type="date">
                 <constraints nullable="false"/>
             </column>
         </createTable>

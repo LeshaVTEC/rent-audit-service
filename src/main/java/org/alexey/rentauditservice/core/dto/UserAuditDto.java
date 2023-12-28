@@ -26,5 +26,4 @@ public class UserAuditDto {
 
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
-
 }

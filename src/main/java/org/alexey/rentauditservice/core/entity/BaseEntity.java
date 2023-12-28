@@ -15,6 +15,7 @@ import java.util.UUID;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public abstract class BaseEntity implements Serializable {
+
     @Id
     private UUID id = UUID.randomUUID();
     @CreatedDate

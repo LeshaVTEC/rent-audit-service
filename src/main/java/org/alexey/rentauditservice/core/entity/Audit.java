@@ -1,6 +1,10 @@
 package org.alexey.rentauditservice.core.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -10,7 +14,7 @@ import java.util.UUID;
 public class Audit {
 
     @Id
-    private UUID auditId;
+    private UUID id;
 
     private LocalDateTime actionDate;
 
@@ -43,7 +47,7 @@ public class Audit {
                  AuditedAction action,
                  EssenceType essenceType,
                  String essenceTypeId) {
-        this.auditId = auditId;
+        this.id = auditId;
         this.actionDate = actionDate;
         this.userId = userId;
         this.userEmail = userEmail;
@@ -54,12 +58,12 @@ public class Audit {
         this.essenceTypeId = essenceTypeId;
     }
 
-    public UUID getAuditId() {
-        return auditId;
+    public UUID getId() {
+        return id;
     }
 
-    public Audit setAuditId(UUID auditId) {
-        this.auditId = auditId;
+    public Audit setId(UUID auditId) {
+        this.id = auditId;
         return this;
     }
 

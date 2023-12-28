@@ -1,15 +1,16 @@
 package org.alexey.rentauditservice.service.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.alexey.rentauditservice.config.properties.JwtProperty;
-import org.alexey.rentauditservice.core.dto.UserAuditDto;
 import org.alexey.rentauditservice.core.dto.UserDetailsDto;
 import org.springframework.stereotype.Component;
-
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
@@ -23,16 +24,6 @@ public class JwtHandler {
         this.objectMapper = objectMapper;
     }
 
-    public String generateAccessToken(UserAuditDto userAuditDto) {
-        return Jwts.builder()
-                .setSubject(convertDtoToJson(userAuditDto))
-                .setIssuer(jwtProperty.getIssuer())
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(1)))
-                .signWith(SignatureAlgorithm.HS512, jwtProperty.getSecret())
-                .compact();
-    }
-
     public UserDetailsDto getUserDetailsDtoFromJwt(String token) {
         Claims claims = Jwts.parser()
                 .setSigningKey(jwtProperty.getSecret())
@@ -40,15 +31,6 @@ public class JwtHandler {
                 .getBody();
 
         return convertDtoFromJson(claims.getSubject());
-    }
-
-    public Date getExpirationDate(String token) {
-        Claims claims = Jwts.parser()
-                .setSigningKey(jwtProperty.getSecret())
-                .parseClaimsJws(token)
-                .getBody();
-
-        return claims.getExpiration();
     }
 
     public boolean validate(String token) {
@@ -67,14 +49,6 @@ public class JwtHandler {
             log.error("JWT claims string is empty " + exception.getMessage());
         }
         return false;
-    }
-
-    private String convertDtoToJson(UserAuditDto object) {
-        try {
-            return objectMapper.writeValueAsString(object);
-        } catch (Exception exception) {
-            throw new RuntimeException("Object mapper filed while writing value: " + exception.getMessage());
-        }
     }
 
     private UserDetailsDto convertDtoFromJson(String json) {

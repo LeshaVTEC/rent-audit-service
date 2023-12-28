@@ -5,20 +5,28 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.alexey.rentauditservice.core.entity.BaseEntity;
 import org.alexey.rentauditservice.core.entity.ReportStatus;
 import org.alexey.rentauditservice.core.entity.ReportType;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Accessors(chain = true)
-public class ReportDto extends BaseEntity {
+public class ReportDto {
 
-    private ReportStatus reportStatus;
+    private UUID id;
 
-    private ReportType reportType;
+    private LocalDateTime creationDate;
+
+    private LocalDateTime updateDate;
+
+    private ReportStatus status;
+
+    private ReportType type;
 
     private String description;
 

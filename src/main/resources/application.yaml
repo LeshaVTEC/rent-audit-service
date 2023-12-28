@@ -20,3 +20,15 @@ app:
   jwt:
     secret: QAZ1ZjAzNjQtMzViZi00MDRjLTljZjQtNjNjYWIyZTU5ZDYz
     issuer: org.alexey
+
+management:
+  endpoints:
+    web:
+      exposure:
+        # Exposes essential Health and Prometheus metrics within Actuator's endpoints
+        include: health, prometheus, metrics, info, env, liquibase
+  endpoint:
+    health:
+      probes:
+        # Exposes "liveness" and "readiness" metrics within Actuator's endpoints
+        enabled: true

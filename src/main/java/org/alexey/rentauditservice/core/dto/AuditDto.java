@@ -23,7 +23,7 @@ import java.util.UUID;
 @Accessors(chain = true)
 public class AuditDto {
 
-    private UUID auditId;
+    private UUID id;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonSerialize(using = LocalDateTimeSerializer.class)

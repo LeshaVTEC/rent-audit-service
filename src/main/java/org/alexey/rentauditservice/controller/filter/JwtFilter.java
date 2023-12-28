@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.List;
 
 import static org.apache.logging.log4j.util.Strings.isEmpty;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
@@ -35,7 +36,11 @@ public class JwtFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain
     ) throws ServletException, IOException {
-        final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
+        final String header = request.getHeader(AUTHORIZATION);
+        if (request.getRequestURI().contains("actuator")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
         if (isEmpty(header) || !header.startsWith("Bearer ")) {
             throw new RuntimeException("No token");
         }

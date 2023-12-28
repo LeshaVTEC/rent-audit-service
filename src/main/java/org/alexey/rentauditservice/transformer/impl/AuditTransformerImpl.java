@@ -11,7 +11,7 @@ public class AuditTransformerImpl implements AuditTransformer {
 
     @Override
     public AuditDto transformAuditDtoFromEntity(Audit audit) {
-        return new AuditDto().setAuditId(audit.getAuditId())
+        return new AuditDto().setId(audit.getId())
                 .setCreationDate(audit.getActionDate())
                 .setUserAuditDto(getUserDtoFromAudit(audit))
                 .setAction(audit.getAction())
@@ -21,8 +21,8 @@ public class AuditTransformerImpl implements AuditTransformer {
     }
 
     @Override
-    public Audit transformEntityFromAuditDto(AuditDto auditDto){
-        return new Audit().setAuditId(auditDto.getAuditId())
+    public Audit transformEntityFromAuditDto(AuditDto auditDto) {
+        return new Audit().setId(auditDto.getId())
                 .setActionDate(auditDto.getCreationDate())
                 .setUserId(auditDto.getUserAuditDto().getUserId())
                 .setUserEmail(auditDto.getUserAuditDto().getEmail())
@@ -33,7 +33,7 @@ public class AuditTransformerImpl implements AuditTransformer {
                 .setEssenceTypeId(auditDto.getEssenceTypeId());
     }
 
-    private UserAuditDto getUserDtoFromAudit(Audit audit){
+    private UserAuditDto getUserDtoFromAudit(Audit audit) {
         return new UserAuditDto().setUserId(audit.getUserId())
                 .setEmail(audit.getUserEmail())
                 .setFio(audit.getUserFio())
