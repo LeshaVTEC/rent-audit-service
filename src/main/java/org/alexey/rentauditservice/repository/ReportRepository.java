@@ -2,6 +2,7 @@ package org.alexey.rentauditservice.repository;
 
 import org.alexey.rentauditservice.core.entity.Report;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
@@ -9,5 +10,6 @@ import java.util.UUID;
 @Repository
 public interface ReportRepository extends JpaRepository<Report, UUID> {
 
+    @Query("SELECT r.status FROM Report AS r WHERE r.id = :id")
     String getStatusById(UUID id);
 }

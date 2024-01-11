@@ -10,7 +10,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 // TODO replace Russian messages with English
 // TODO remove all comments
 // TODO remove all empty lines, align spaces
-// TODO remove all @Autowired
 
 @SpringBootApplication
 @EnableJpaAuditing

@@ -8,7 +8,6 @@ import jakarta.persistence.Table;
 import java.time.LocalDate;
 
 import static jakarta.persistence.EnumType.STRING;
-import static org.apache.commons.lang3.StringUtils.substring;
 
 @Entity
 @Table(schema = "config", name = "reports")
@@ -24,10 +23,10 @@ public class Report extends BaseEntity {
 
     private String userId;
 
-    @Column(name = "*from*")
+    @Column(name = "from_date")
     private LocalDate fromDate;
 
-    @Column(name = "*to*")
+    @Column(name = "to_date")
     private LocalDate toDate;
 
     public Report() {
@@ -55,15 +54,6 @@ public class Report extends BaseEntity {
         this.userId = userId;
         this.fromDate = fromDate;
         this.toDate = toDate;
-    }
-
-    public String getXmlFileName() {
-        return "report-%s-for-user-%s-from-%s-to-%s.xml".formatted(
-                substring(getId().toString(), 0, 5),
-                substring(userId, 0, 5),
-                fromDate,
-                toDate
-        );
     }
 
     public ReportStatus getStatus() {

@@ -2,7 +2,7 @@ package org.alexey.rentauditservice.core.entity;
 
 public enum ReportType {
 
-    JOURNAL_AUDIT("Journal Audit");
+    JOURNAL_AUDIT("Журнал аудита");
 
     private String description;
 

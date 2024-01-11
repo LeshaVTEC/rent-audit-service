@@ -4,7 +4,7 @@ import org.alexey.rentauditservice.core.entity.Audit;
 
 import java.util.List;
 
-public interface XmlFileGenerator {
+public interface FileGenerator {
 
-    void generateXmlFile(List<Audit> audits, String filename) throws Exception;
+    void generateFile(List<Audit> audits, String filename) throws Exception;
 }

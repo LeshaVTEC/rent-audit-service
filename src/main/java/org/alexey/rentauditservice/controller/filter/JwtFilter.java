@@ -6,7 +6,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.alexey.rentauditservice.core.dto.UserDetailsDto;
 import org.alexey.rentauditservice.service.jwt.JwtHandler;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -49,11 +48,11 @@ public class JwtFilter extends OncePerRequestFilter {
             throw new RuntimeException("Not valid token");
         }
 
-        UserDetailsDto userAuditDto = jwtHandler.getUserDetailsDtoFromJwt(token);
-        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + userAuditDto.getRole()));
+        UserDetailsDto userDetailsDtoDto = jwtHandler.getUserDetailsDtoFromJwt(token);
+        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + userDetailsDtoDto.getRole()));
 
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                userAuditDto,
+                userDetailsDtoDto,
                 null,
                 authorities
         );

@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/audit
+    url: jdbc:postgresql://audit-database:5432/audit
     username: postgres
     password: postgres
     hikari:
@@ -13,10 +13,15 @@ spring:
     deserialization:
       read-unknown-enum-values-as-null: true
 server:
-  port: 8081
+  port: 80
   servlet:
     context-path: "/realty/api"
+
 app:
+  beans:
+    file-generators:
+      xml:
+        enabled: false
   jwt:
     secret: QAZ1ZjAzNjQtMzViZi00MDRjLTljZjQtNjNjYWIyZTU5ZDYz
     issuer: org.alexey
@@ -25,10 +30,8 @@ management:
   endpoints:
     web:
       exposure:
-        # Exposes essential Health and Prometheus metrics within Actuator's endpoints
         include: health, prometheus, metrics, info, env, liquibase
   endpoint:
     health:
       probes:
-        # Exposes "liveness" and "readiness" metrics within Actuator's endpoints
         enabled: true

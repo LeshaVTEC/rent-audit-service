@@ -15,7 +15,7 @@ import org.alexey.rentauditservice.core.entity.ReportType;
 
 import java.time.LocalDate;
 
-import static org.alexey.rentauditservice.core.entity.ReportStatus.LOADED;
+import static org.alexey.rentauditservice.core.entity.ReportStatus.PROGRESS;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -38,7 +38,7 @@ public class UserActionAuditParamDto {
 
     public static Report toEntity(ReportType type, UserActionAuditParamDto dto) {
         return new Report()
-                .setStatus(LOADED)
+                .setStatus(PROGRESS)
                 .setType(type)
                 .setUserId(dto.getUserId())
                 .setFromDate(dto.getFrom())

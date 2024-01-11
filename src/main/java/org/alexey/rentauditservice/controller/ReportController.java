@@ -2,12 +2,12 @@ package org.alexey.rentauditservice.controller;
 
 import org.alexey.rentauditservice.core.dto.PageOfReportDto;
 import org.alexey.rentauditservice.core.dto.UserActionAuditParamDto;
-import org.alexey.rentauditservice.core.entity.ReportStatus;
 import org.alexey.rentauditservice.core.entity.ReportType;
 import org.alexey.rentauditservice.service.ReportService;
 import org.alexey.rentauditservice.transformer.PageTransformer;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,7 +29,7 @@ public class ReportController {
         this.pageTransformer = pageTransformer;
     }
 
-    @PostMapping("/{type}")
+    @PostMapping(value = "/{type}")
     public String startReport(@PathVariable ReportType type, @RequestBody UserActionAuditParamDto paramDto) {
         reportService.createReport(type, paramDto);
         return "Report started";
@@ -42,8 +42,16 @@ public class ReportController {
         return pageTransformer.transformPageOfReportDtoFromPage(reportService.getAllReports(pageable));
     }
 
-    @RequestMapping(method = RequestMethod.HEAD, value = "/{id}")
-    public ReportStatus getReportStatus(@PathVariable String id) {
-        return reportService.getStatusById(id);
+    @GetMapping(value = "/{UUID}/export")
+    public String saveFile(@PathVariable (name = "UUID") String fileName){
+        return reportService.saveFileByName(fileName);
+    }
+
+    @RequestMapping(method = RequestMethod.HEAD, value = "/{id}/export")
+    public ResponseEntity getReportStatus(@PathVariable String id) {
+        return switch (reportService.getStatusById(id)) {
+            case DONE -> ResponseEntity.status(200).build();
+            case ERROR, LOADED, PROGRESS -> ResponseEntity.status(505).build();
+        };
     }
 }

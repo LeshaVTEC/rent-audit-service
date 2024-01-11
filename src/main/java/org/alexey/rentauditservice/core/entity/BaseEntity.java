@@ -18,9 +18,11 @@ public abstract class BaseEntity implements Serializable {
 
     @Id
     private UUID id = UUID.randomUUID();
+
     @CreatedDate
     @Column(name = "created_date")
     private LocalDateTime creationDate;
+
     @LastModifiedDate
     @Column(name = "updated_date")
     private LocalDateTime updateDate;

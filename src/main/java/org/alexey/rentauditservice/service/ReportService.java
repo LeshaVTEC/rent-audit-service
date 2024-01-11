@@ -13,5 +13,7 @@ public interface ReportService {
 
     Page<ReportDto> getAllReports(Pageable pageable);
 
+    String saveFileByName(String fileName);
+
     ReportStatus getStatusById(String id);
 }

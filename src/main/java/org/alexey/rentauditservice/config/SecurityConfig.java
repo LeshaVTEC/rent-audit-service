@@ -14,6 +14,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import static jakarta.servlet.http.HttpServletResponse.SC_FORBIDDEN;
 import static jakarta.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.HEAD;
 import static org.springframework.http.HttpMethod.OPTIONS;
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
@@ -42,7 +43,10 @@ public class SecurityConfig {
         http.authorizeHttpRequests(requests -> requests
                 .requestMatchers(GET, "/audit").hasAnyRole("ADMIN")
                 .requestMatchers(GET, "/audit/{id}").hasAnyRole("ADMIN")
-                .requestMatchers(GET, "/report/{type}").hasAnyRole("ADMIN")
+                .requestMatchers(POST, "/report/{type}").hasAnyRole("ADMIN")
+                .requestMatchers(GET, "/report/{UUID}/export").hasAnyRole("ADMIN")
+                .requestMatchers(HEAD, "/report/{id}/export").hasAnyRole("ADMIN")
+                .requestMatchers(GET, "/report").hasAnyRole("ADMIN")
                 .requestMatchers(POST, "/audit").hasAnyRole("SYSTEM")
                 .requestMatchers(GET, "/audit/**").authenticated()
         );

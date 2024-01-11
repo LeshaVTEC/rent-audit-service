@@ -33,10 +33,10 @@
             <column name="user_id" type="varchar">
                 <constraints nullable="false"/>
             </column>
-            <column name="*from*" type="date">
+            <column name="from_date" type="date">
                 <constraints nullable="false"/>
             </column>
-            <column name="*to*" type="date">
+            <column name="to_date" type="date">
                 <constraints nullable="false"/>
             </column>
         </createTable>
