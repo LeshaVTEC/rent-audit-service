@@ -1,8 +1,14 @@
 package org.alexey.rentauditservice.exception;
 
 import lombok.extern.slf4j.Slf4j;
+import org.alexey.rentauditservice.exception.body.ErrorField;
 import org.alexey.rentauditservice.exception.body.ErrorResponse;
+import org.alexey.rentauditservice.exception.body.StructuredErrorResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -17,5 +23,42 @@ public class ExceptionHandlerResolver {
     @ExceptionHandler(EntityNotFoundException.class)
     public ErrorResponse handleEntityNotFound(EntityNotFoundException exception) {
         return new ErrorResponse("error", exception.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ErrorResponse handleHandlerResolverException(HttpMessageNotReadableException exception) {
+        log.error(exception.getMessage());
+        return new ErrorResponse("error",
+                exception.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ValidationException.class)
+    public ErrorResponse handleValidationException(ValidationException exception) {
+        log.error(exception.getMessage());
+        return new ErrorResponse("error",
+                exception.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public StructuredErrorResponse handleValidation(MethodArgumentNotValidException exception) {
+        log.error(exception.getMessage());
+        return new StructuredErrorResponse(
+                "structured_error",
+                exception.getBindingResult()
+                        .getAllErrors()
+                        .stream()
+                        .map(this::convert)
+                        .toList()
+        );
+    }
+
+    private ErrorField convert(ObjectError objectError) {
+        return new ErrorField(
+                ((FieldError) objectError).getField(),
+                objectError.getDefaultMessage()
+        );
     }
 }

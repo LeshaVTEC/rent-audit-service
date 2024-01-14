@@ -6,6 +6,9 @@ import org.alexey.rentauditservice.core.entity.ReportStatus;
 import org.alexey.rentauditservice.core.entity.ReportType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+
+import java.io.IOException;
 
 public interface ReportService {
 
@@ -13,7 +16,7 @@ public interface ReportService {
 
     Page<ReportDto> getAllReports(Pageable pageable);
 
-    String saveFileByName(String fileName);
+    ResponseEntity<String> saveFileByName(String uuid) throws IOException;
 
     ReportStatus getStatusById(String id);
 }

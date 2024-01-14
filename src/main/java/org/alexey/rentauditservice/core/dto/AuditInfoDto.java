@@ -6,10 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.alexey.rentauditservice.core.entity.ReportStatus;
-import org.alexey.rentauditservice.core.entity.ReportType;
+import org.alexey.rentauditservice.core.entity.EssenceType;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -17,7 +15,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class ReportDto {
+public class AuditInfoDto {
 
     @JsonProperty("uuid")
     private UUID id;
@@ -25,14 +23,15 @@ public class ReportDto {
     @JsonProperty("dt_create")
     private Long creationDate;
 
-    @JsonProperty("dt_update")
-    private Long updateDate;
+    @JsonProperty("user")
+    private UserAuditDto userAuditDto;
 
-    private ReportStatus status;
+    @JsonProperty("text")
+    private String action;
 
-    private ReportType type;
+    @JsonProperty("type")
+    private EssenceType essenceType;
 
-    private String description;
-
-    private UserActionAuditParamDto params;
+    @JsonProperty("id")
+    private String essenceTypeId;
 }

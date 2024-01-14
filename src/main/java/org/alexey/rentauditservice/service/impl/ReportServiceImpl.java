@@ -1,6 +1,7 @@
 package org.alexey.rentauditservice.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.alexey.rentauditservice.aop.Audited;
 import org.alexey.rentauditservice.core.dto.ReportDto;
 import org.alexey.rentauditservice.core.dto.UserActionAuditParamDto;
 import org.alexey.rentauditservice.core.entity.Audit;
@@ -14,26 +15,39 @@ import org.alexey.rentauditservice.service.FileGenerator;
 import org.alexey.rentauditservice.service.ReportService;
 import org.alexey.rentauditservice.transformer.ReportTransformer;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
+import static org.alexey.rentauditservice.core.entity.AuditedAction.CREATE_REPORT;
+import static org.alexey.rentauditservice.core.entity.AuditedAction.INFO_ABOUT_ACCESS_REPORT;
+import static org.alexey.rentauditservice.core.entity.AuditedAction.INFO_ABOUT_ALL_REPORTS;
+import static org.alexey.rentauditservice.core.entity.AuditedAction.SAVE_REPORT;
+import static org.alexey.rentauditservice.core.entity.EssenceType.REPORT;
 import static org.alexey.rentauditservice.core.entity.ReportStatus.DONE;
 import static org.alexey.rentauditservice.core.entity.ReportStatus.ERROR;
 
 @Slf4j
 @Service
 public class ReportServiceImpl implements ReportService {
+
+    private static final String FILE_DIRECTORY = ".";
 
     private final ReportRepository reportRepository;
     private final AuditRepository auditRepository;
@@ -54,9 +68,13 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     @Async
+    @Audited(auditedAction = CREATE_REPORT, essenceType = REPORT)
     public void createReport(ReportType type, UserActionAuditParamDto paramDto) {
+        if (!reportRepository.existsByUserId(paramDto.getUserId())){
+            throw new EntityNotFoundException("user", UUID.fromString(paramDto.getUserId()));
+        }
         Report reportEntityForSave = UserActionAuditParamDto.toEntity(type, paramDto);
-        Report savedReport = reportRepository.save(reportEntityForSave);
+        Report savedReport = reportRepository.saveAndFlush(reportEntityForSave);
 
         List<Audit> audits = auditRepository.findAllByParam(
                 UUID.fromString(paramDto.getUserId()),
@@ -76,6 +94,7 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
+    @Audited(auditedAction = INFO_ABOUT_ALL_REPORTS, essenceType = REPORT)
     public Page<ReportDto> getAllReports(Pageable pageable) {
         Page<Report> pageEntity = reportRepository.findAll(pageable);
         List<ReportDto> reportDtoList = pageEntity.stream()
@@ -85,25 +104,33 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public String saveFileByName(String fileName) {
-        String userHome = System.getProperty("user.home");
-        String downloadsDirectory = userHome + File.separator + "Downloads" + File.separator;
-        try {
-            File file = new File(downloadsDirectory + fileName + ".xlsx");
+    @Audited(auditedAction = SAVE_REPORT, essenceType = REPORT)
+    public ResponseEntity<String> saveFileByName(String uuid) throws IOException {
+        String fileName = uuid + ".xlsx";
+        Path filePath = Paths.get(FILE_DIRECTORY).resolve(fileName).normalize();
+        Resource resource = new UrlResource(filePath.toUri());
 
-            if (!file.exists()) {
-                file.createNewFile();
-            }
+        if (resource.exists()) {
+            byte[] fileContent = Files.readAllBytes(filePath);
+            String base64Encoded = Base64.getEncoder().encodeToString(fileContent);
 
-            Files.copy(new File(fileName + ".xlsx").toPath(), file.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
-            return "Файл '" + fileName + "' успешно сохранен по пути: " + file.getAbsolutePath();
-        } catch (IOException exception) {
-            exception.printStackTrace();
-            return "Ошибка сохранения файла: " + exception.getMessage();
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"");
+            headers.add(
+                    HttpHeaders.CONTENT_TYPE,
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            );
+
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .body(base64Encoded);
+        } else {
+            return ResponseEntity.notFound().build();
         }
     }
 
     @Override
+    @Audited(auditedAction = INFO_ABOUT_ACCESS_REPORT, essenceType = REPORT)
     public ReportStatus getStatusById(String id) {
         try {
             ReportStatus status = ReportStatus.valueOf(reportRepository.getStatusById(UUID.fromString(id)));

@@ -1,6 +1,8 @@
 package org.alexey.rentauditservice.service.impl;
 
+import org.alexey.rentauditservice.aop.Audited;
 import org.alexey.rentauditservice.core.dto.AuditDto;
+import org.alexey.rentauditservice.core.dto.AuditInfoDto;
 import org.alexey.rentauditservice.core.entity.Audit;
 import org.alexey.rentauditservice.exception.EntityNotFoundException;
 import org.alexey.rentauditservice.repository.AuditRepository;
@@ -14,6 +16,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
 
+import static org.alexey.rentauditservice.core.entity.AuditedAction.INFO_ABOUT_ALL_AUDITS;
+import static org.alexey.rentauditservice.core.entity.AuditedAction.INFO_ABOUT_AUDIT_BY_ID;
+import static org.alexey.rentauditservice.core.entity.EssenceType.AUDIT;
+
 @Service
 public class AuditServiceImpl implements AuditService {
 
@@ -26,18 +32,20 @@ public class AuditServiceImpl implements AuditService {
     }
 
     @Override
-    public Page<AuditDto> getAllAudits(Pageable pageable) {
+    @Audited(auditedAction = INFO_ABOUT_ALL_AUDITS, essenceType = AUDIT)
+    public Page<AuditInfoDto> getAllAudits(Pageable pageable) {
         Page<Audit> pageEntity = auditRepository.findAll(pageable);
-        List<AuditDto> auditDtoList = pageEntity.stream()
-                .map(auditTransformer::transformAuditDtoFromEntity)
+        List<AuditInfoDto> auditInfoDtoList = pageEntity.stream()
+                .map(auditTransformer::transformAuditInfoDtoFromEntity)
                 .toList();
-        return new PageImpl<AuditDto>(auditDtoList, pageable, pageEntity.getTotalElements());
+        return new PageImpl<AuditInfoDto>(auditInfoDtoList, pageable, pageEntity.getTotalElements());
     }
 
     @Override
-    public AuditDto findAuditById(UUID id) {
+    @Audited(auditedAction = INFO_ABOUT_AUDIT_BY_ID, essenceType = AUDIT)
+    public AuditInfoDto findAuditById(UUID id) {
         Audit auditById = auditRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Audit", id));
-        return auditTransformer.transformAuditDtoFromEntity(auditById);
+        return auditTransformer.transformAuditInfoDtoFromEntity(auditById);
     }
 
     @Override

@@ -6,10 +6,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 // TODO Unit Tests
 // TODO Swagger Open API
-// TODO Dockerfile, Docker Compose
 // TODO replace Russian messages with English
 // TODO remove all comments
 // TODO remove all empty lines, align spaces
+
 
 @SpringBootApplication
 @EnableJpaAuditing

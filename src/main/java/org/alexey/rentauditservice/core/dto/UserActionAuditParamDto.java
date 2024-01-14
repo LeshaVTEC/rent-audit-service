@@ -1,10 +1,13 @@
 package org.alexey.rentauditservice.core.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,14 +27,19 @@ import static org.alexey.rentauditservice.core.entity.ReportStatus.PROGRESS;
 @Accessors(chain = true)
 public class UserActionAuditParamDto {
 
+    @JsonProperty("user")
+    @NotNull
+    @Size(min = 36, max = 36, message = "size must be 36")
     private String userId;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @NotNull
+    @JsonFormat(pattern = "yyyy.MM.dd")
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate from;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @NotNull
+    @JsonFormat(pattern = "yyyy.MM.dd")
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate to;

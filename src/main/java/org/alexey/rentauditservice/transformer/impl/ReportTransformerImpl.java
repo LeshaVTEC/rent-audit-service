@@ -6,6 +6,8 @@ import org.alexey.rentauditservice.core.entity.Report;
 import org.alexey.rentauditservice.transformer.ReportTransformer;
 import org.springframework.stereotype.Component;
 
+import java.time.ZoneId;
+
 @Component
 public class ReportTransformerImpl implements ReportTransformer {
 
@@ -16,8 +18,8 @@ public class ReportTransformerImpl implements ReportTransformer {
                 .setDescription(report.getDescription())
                 .setParams(getParamFromEntity(report))
                 .setId(report.getId())
-                .setCreationDate(report.getCreationDate())
-                .setUpdateDate(report.getUpdateDate());
+                .setCreationDate(report.getCreationDate().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli())
+                .setUpdateDate(report.getUpdateDate().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
     }
 
     private UserActionAuditParamDto getParamFromEntity(Report report) {

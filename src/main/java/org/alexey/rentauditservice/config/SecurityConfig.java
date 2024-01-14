@@ -24,14 +24,6 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 public class SecurityConfig {
 
     @Bean
-    @Order(SecurityProperties.IGNORED_ORDER)
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return web -> web.ignoring()
-                .requestMatchers(GET, "/actuator/**")
-                .requestMatchers(OPTIONS, "/**");
-    }
-
-    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtFilter filter) throws Exception {
         http = http.cors().and().csrf().disable();
         http = http.sessionManagement().sessionCreationPolicy(STATELESS).and();
@@ -48,7 +40,6 @@ public class SecurityConfig {
                 .requestMatchers(HEAD, "/report/{id}/export").hasAnyRole("ADMIN")
                 .requestMatchers(GET, "/report").hasAnyRole("ADMIN")
                 .requestMatchers(POST, "/audit").hasAnyRole("SYSTEM")
-                .requestMatchers(GET, "/audit/**").authenticated()
         );
         http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
         return http.build();

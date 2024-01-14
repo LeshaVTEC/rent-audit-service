@@ -2,5 +2,5 @@ package org.alexey.rentauditservice.core.entity;
 
 public enum EssenceType {
 
-    USER;
+    USER, AUDIT, REPORT;
 }

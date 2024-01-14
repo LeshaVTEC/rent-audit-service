@@ -1,7 +1,8 @@
 package org.alexey.rentauditservice.controller;
 
 import org.alexey.rentauditservice.core.dto.AuditDto;
-import org.alexey.rentauditservice.core.dto.PageOfAuditDto;
+import org.alexey.rentauditservice.core.dto.AuditInfoDto;
+import org.alexey.rentauditservice.core.dto.PageOfAuditInfoDto;
 import org.alexey.rentauditservice.service.AuditService;
 import org.alexey.rentauditservice.transformer.PageTransformer;
 import org.springframework.data.domain.PageRequest;
@@ -32,19 +33,19 @@ public class AuditController {
     }
 
     @GetMapping
-    public PageOfAuditDto getListAudits(@RequestParam(name = "page", defaultValue = "1") Integer page,
-                                        @RequestParam(value = "size", defaultValue = "20") Integer size) {
+    public PageOfAuditInfoDto getListAudits(@RequestParam(name = "page", defaultValue = "1") Integer page,
+                                            @RequestParam(value = "size", defaultValue = "20") Integer size) {
         Pageable pageable = PageRequest.of(page - 1, size);
-        return pageTransformer.transformPageOfAuditDtoFromPage(auditService.getAllAudits(pageable));
+        return pageTransformer.transformPageOfAuditInfoDtoFromPage(auditService.getAllAudits(pageable));
     }
 
     @GetMapping("/{id}")
-    public AuditDto getAuditById(@PathVariable UUID id) {
+    public AuditInfoDto getAuditById(@PathVariable UUID id) {
         return auditService.findAuditById(id);
     }
 
     @PostMapping(produces = APPLICATION_JSON_VALUE)
-    AuditDto acceptRequestToCreateLog(@RequestHeader String AUTHORIZATION, @RequestBody AuditDto auditDto) {
+    public AuditDto acceptRequestToCreateLog(@RequestHeader String AUTHORIZATION, @RequestBody AuditDto auditDto) {
         return auditService.saveAction(auditDto);
     }
 }

@@ -1,7 +1,8 @@
 package org.alexey.rentauditservice.transformer.impl;
 
 import org.alexey.rentauditservice.core.dto.AuditDto;
-import org.alexey.rentauditservice.core.dto.PageOfAuditDto;
+import org.alexey.rentauditservice.core.dto.AuditInfoDto;
+import org.alexey.rentauditservice.core.dto.PageOfAuditInfoDto;
 import org.alexey.rentauditservice.core.dto.PageOfReportDto;
 import org.alexey.rentauditservice.core.dto.ReportDto;
 import org.alexey.rentauditservice.transformer.PageTransformer;
@@ -12,8 +13,8 @@ import org.springframework.stereotype.Component;
 public class PageTransformerImpl implements PageTransformer {
 
     @Override
-    public PageOfAuditDto transformPageOfAuditDtoFromPage(Page<AuditDto> page) {
-        return (PageOfAuditDto) new PageOfAuditDto()
+    public PageOfAuditInfoDto transformPageOfAuditInfoDtoFromPage(Page<AuditInfoDto> page) {
+        return (PageOfAuditInfoDto) new PageOfAuditInfoDto()
                 .setContent(page.getContent())
                 .setNumber(page.getNumber())
                 .setSize(page.getSize())

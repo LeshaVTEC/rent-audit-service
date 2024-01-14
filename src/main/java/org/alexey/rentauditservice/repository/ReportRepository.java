@@ -12,4 +12,6 @@ public interface ReportRepository extends JpaRepository<Report, UUID> {
 
     @Query("SELECT r.status FROM Report AS r WHERE r.id = :id")
     String getStatusById(UUID id);
+
+    Boolean existsByUserId(String userId);
 }
