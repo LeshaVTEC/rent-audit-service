@@ -70,7 +70,7 @@ public class ReportServiceImpl implements ReportService {
     @Async
     @Audited(auditedAction = CREATE_REPORT, essenceType = REPORT)
     public void createReport(ReportType type, UserActionAuditParamDto paramDto) {
-        if (!reportRepository.existsByUserId(paramDto.getUserId())){
+        if (!reportRepository.existsByUserId(paramDto.getUserId())){                            //пересмотреть какой репозиторий всетаки должерн вызываться, скорее всего аудит-репозиторий
             throw new EntityNotFoundException("user", UUID.fromString(paramDto.getUserId()));
         }
         Report reportEntityForSave = UserActionAuditParamDto.toEntity(type, paramDto);
